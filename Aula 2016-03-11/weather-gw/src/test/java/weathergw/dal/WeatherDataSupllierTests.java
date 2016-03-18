@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  */
 public class WeatherDataSupllierTests {
     @Test
-    void shouldObtainWeatherInfosFromFile() {
+    public void shouldObtainWeatherInfosFromFile() {
         Supplier<Collection<WeatherInfo>> d = new WeatherInfoFileSupplier("weather-data.csv");
 
         Collection<WeatherInfo> weatherInfos = d.get();
