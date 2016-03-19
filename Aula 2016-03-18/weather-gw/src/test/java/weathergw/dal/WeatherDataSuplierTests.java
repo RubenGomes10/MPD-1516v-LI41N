@@ -20,7 +20,7 @@ public class WeatherDataSuplierTests {
 
     @Test
     public void shouldObtainWeatherInfosFromService() {
-        validateWeaherInfoSupplier( new WeatherInfoServiceSupplier("https://raw.githubusercontent.com/isel-leic-mpd/mpd-2016-i41d/master/aula02/wthr/src/main/resources/data/lisbon-weather-history.csv"));
+        validateWeaherInfoSupplier( new WeatherInfoServiceSupplier("http://api.worldweatheronline.com/free/v2/past-weather.ashx?key=25781444d49842dc5be040ff259c5&q=lisbon&format=csv&date=2016-2-1&enddate=2016-2-29&tp=6"));
     }
 
 
