@@ -1,18 +1,14 @@
 package weathergw.domain;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import weathergw.BaseWeatherInfoTests;
 
 import java.time.LocalTime;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,7 +17,7 @@ import static org.junit.Assert.assertSame;
 /**
  * Created by lfalcao on 14/03/16.
  */
-public class QueryMethodsWeatherInfoQueriesTests extends BaseWeatherInfoQueriesTests {
+public class QueryMethodsWeatherInfoQueriesTests extends BaseWeatherInfoTests {
     private static WeatherInfoQueries wiq;
     private static List<WeatherInfo> weatherInfos;
 

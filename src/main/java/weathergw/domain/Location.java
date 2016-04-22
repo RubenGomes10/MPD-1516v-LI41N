@@ -1,46 +1,46 @@
 package weathergw.domain;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Created by lfalcao on 07/03/16.
  */
-public class Location implements Iterable<WeatherInfo> {
+public class Location {
     private String name;
-    private Map<LocalDate, WeatherInfo> weatherInfos;
+    private Supplier<List<WeatherInfo>> sup;
 
-    public Location(String name) {
+    public Location(String name, Supplier<List<WeatherInfo>> sup) {
         this.name = name;
-        weatherInfos = new HashMap<LocalDate, WeatherInfo>();
+        this.sup = sup;
     }
 
     public Location() {
+        this(null, null);
+    }
 
+    public Location(String name) {
+        this(name, null);
     }
 
 
-    public void add(WeatherInfo weatherInfo) {
-        Objects.requireNonNull(weatherInfo, "weatherInfo cannot be null");
+//    @Override
+//    public Iterator<WeatherInfo> iterator() {
+//        return weatherInfos.values().iterator();
+//    }
 
-        weatherInfos.put(weatherInfo.getDate(), weatherInfo);
-    }
-
-    public WeatherInfo get(LocalDate date) {
-        return weatherInfos.get(date);
-    }
-
-
-    @Override
-    public Iterator<WeatherInfo> iterator() {
-        return weatherInfos.values().iterator();
-    }
-
-    public Collection<WeatherInfo> weatherInfos() {
-        return Collections.unmodifiableCollection(weatherInfos.values());
+    public List<WeatherInfo> weatherInfos() {
+        return sup.get();
     }
 
     public String getName() {
         return name;
+    }
+
+    public WeatherInfo get(LocalDate localDate) {
+        throw new NotImplementedException();
     }
 }

@@ -1,4 +1,6 @@
-package weathergw.domain;
+package weathergw;
+
+import weathergw.domain.WeatherInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.function.Supplier;
 /**
  * Created by lfalcao on 04/04/16.
  */
-public class BaseWeatherInfoQueriesTests {
+public class BaseWeatherInfoTests {
 
     protected static Supplier<List<WeatherInfo>> getSupplier(final int... maxTemps) {
 

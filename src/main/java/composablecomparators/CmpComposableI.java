@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * Created by lfalcao on 15/04/16.
  */
-public interface CmpComposableI<T> extends Comparator<T> {
+public interface CmpComposableI<T> extends Comparator<T> { 
 
 
     static <T, U extends Comparable<U>> CmpComposableI<T> createComparatorV3(Function<T, U> keyExtractor) {

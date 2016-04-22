@@ -1,6 +1,7 @@
 package weathergw.domain;
 
 import org.junit.Test;
+import weathergw.BaseWeatherInfoTests;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by lfalcao on 14/03/16.
  */
-public class QueriesTests extends BaseWeatherInfoQueriesTests {
+public class QueriesTests extends BaseWeatherInfoTests {
 
     @Test
     public void shouldObtainMaxTemp() {
