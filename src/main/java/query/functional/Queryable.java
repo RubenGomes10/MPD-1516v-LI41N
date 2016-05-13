@@ -30,7 +30,7 @@ public interface Queryable<T> extends Nonspliterator<T> {
 
     default Queryable<T> limit(long maxSize) {
         long[] count = {maxSize};
-        return consumer -> count[0] > 0 && --count[0] >=0  ? false : tryAdvance(consumer);
+        return consumer -> count[0] > 0 && --count[0] >=0  ? tryAdvance(consumer) : false;
     }
 
     default Queryable<T> distinct() {
