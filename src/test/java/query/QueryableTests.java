@@ -1,9 +1,8 @@
 package query;
 
 import org.junit.Test;
-import query.oo.Queryable;
+import query.functional.Queryable;
 
-import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,9 +12,9 @@ import java.util.stream.Stream;
 public class QueryableTests {
 
     @Test
-    public void shouldUseSeveralOperatorsInQuery() {
+    public void shouldUseSeveralOperatorsInQueryFunctional() {
 
-        Queryable<String> queryable = Queryable.of(Stream.of("MPD", "ISEL", "Modelação", "Padrões", "-ISEL", "-MPD", "MPD", "PDM").collect(Collectors.toList()));
+        query.functional.Queryable<String> queryable = query.functional.Queryable.of(Stream.of("MPD", "ISEL", "Modelação", "Padrões", "-ISEL", "-MPD", "MPD", "PDM").collect(Collectors.toList()));
         queryable
                 .peek(s -> System.out.println("source"))
                 .filter(s -> !s.startsWith("-"))
@@ -25,7 +24,20 @@ public class QueryableTests {
                 .distinct()
                 .peek(s -> System.out.println("distinct"))
                 .forEach(System.out::println);
+    }
 
+    @Test
+    public void shouldUseSeveralOperatorsInQueryObjectOriented() {
 
+        query.oo.Queryable<String> queryable = query.oo.Queryable.of(Stream.of("MPD", "ISEL", "Modelação", "Padrões", "-ISEL", "-MPD", "MPD", "PDM").collect(Collectors.toList()));
+        queryable
+                .peek(s -> System.out.println("source"))
+                .filter(s -> !s.startsWith("-"))
+                .peek(s -> System.out.println("filter"))
+                .map(s-> s.length())
+                .peek(s -> System.out.println("map"))
+                .distinct()
+                .peek(s -> System.out.println("distinct"))
+                .forEach(System.out::println);
     }
 }

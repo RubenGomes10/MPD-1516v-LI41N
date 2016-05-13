@@ -9,7 +9,6 @@ import java.util.function.Consumer;
  */
 public class DistinctQueryable<T> extends Queryable<T> {
     private Queryable<T> nextQueryable;
-    Set<? super T> distincts = new HashSet<>();
 
 
     public DistinctQueryable(Queryable<T> nextQueryable) {
@@ -18,15 +17,7 @@ public class DistinctQueryable<T> extends Queryable<T> {
 
     @Override
     public boolean tryAdvance(Consumer<? super T> consumer) {
-        boolean []found = {false};
-        while(!found[0] && nextQueryable.tryAdvance(t -> {
-           boolean res = distincts.add(t);
-            if(res) {
-                consumer.accept(t);
-                found[0] = true;
-            }
-        }));
-
-        return found[0];
+        final Set<? super T> distincts = new HashSet<>();
+        return Queryable.tryAdvanceWithPredicate(consumer, t -> distincts.add(t), nextQueryable);
     }
 }

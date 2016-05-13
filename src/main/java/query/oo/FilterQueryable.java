@@ -16,13 +16,6 @@ public class FilterQueryable<T> extends Queryable<T> {
 
     @Override
     public boolean tryAdvance(Consumer<? super T> consumer) {
-        boolean []found = {false};
-        while(!found[0] && nextQueryable.tryAdvance(t -> {
-            if(pred.test(t)) {
-                consumer.accept(t);
-                found[0] = true;
-            }
-        }));
-        return found[0];
+        return Queryable.tryAdvanceWithPredicate(consumer, pred, nextQueryable);
     }
 }
