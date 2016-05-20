@@ -7,18 +7,23 @@ public class Transaction{
 	private int value;
 	private Currency currency;
 
-	public Transaction(Trader trader, int year, int value)
+
+	private Transaction(Trader trader, int year, int value, Currency currency)
 	{
 		this.trader = trader;
 		this.year = year;
 		this.value = value;
-		this.currency = Currency.EUR;
+		this.currency = currency;
 	}
 
-	public Transaction(Currency currency, int value)
+	public Transaction(Trader trader, int year, int value)
 	{
-		this.currency = currency;
-		this.value = value;
+		this(trader, year, value, Currency.EUR);
+	}
+
+	public Transaction(int year, int value, Currency currency)
+	{
+		this(null, year, value, currency);
 	}
 
 	public Trader getTrader(){ 

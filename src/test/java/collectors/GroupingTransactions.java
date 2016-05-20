@@ -4,7 +4,6 @@ import org.junit.Test;
 import transactions.Transaction;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
@@ -12,21 +11,9 @@ import static java.util.stream.Collectors.*;
 /**
  * Created by lfalcao on 13/05/16.
  */
-public class GroupingTransactions {
+public class GroupingTransactions extends CollectorsTests {
 
-    public static List<Transaction> transactions = Arrays.asList( new Transaction(Transaction.Currency.EUR, 1500),
-            new Transaction(Transaction.Currency.USD, 2300),
-            new Transaction(Transaction.Currency.GBP, 9900),
-            new Transaction(Transaction.Currency.EUR, 1100),
-            new Transaction(Transaction.Currency.JPY, 7800),
-            new Transaction(Transaction.Currency.CHF, 6700),
-            new Transaction(Transaction.Currency.EUR, 5600),
-            new Transaction(Transaction.Currency.USD, 4500),
-            new Transaction(Transaction.Currency.CHF, 3400),
-            new Transaction(Transaction.Currency.GBP, 3200),
-            new Transaction(Transaction.Currency.USD, 4600),
-            new Transaction(Transaction.Currency.JPY, 5700),
-            new Transaction(Transaction.Currency.EUR, 6800) );
+    public static final int LOWER_TRANSACTIONS_LIMIT = 5000;
 
 
     @Test
@@ -104,7 +91,7 @@ public class GroupingTransactions {
                 .collect(reducing(0, this::getTransactionValue, this::sumInts)));
 
         System.out.println("---------------------------------");
-        System.out.println(transactions.stream()
+        System.out.println(transactions.parallelStream()
                 .filter(t -> t.getValue() > 5000)
                 .reduce(0, this::accumulateTransactionValue, this::sumInts));
 
@@ -123,17 +110,75 @@ public class GroupingTransactions {
 
     @Test
     public void multiLevelGrouping() {
-        System.out.println(transactions.stream().collect(
+
+        // Transactions by currency type and TransactionClassifier.
+        Map<Transaction.Currency, Map<TransactionClassifier, List<Transaction>>> map = transactions.stream().collect(
                 groupingBy(
                         Transaction::getCurrency,
-                        groupingBy(t -> t.getValue() > 5000 ? TransactionValue.HIGH : TransactionValue.LOW)
-        )).toString());
+                        groupingBy(t -> t.getValue() > 5000 ? TransactionClassifier.HIGH : TransactionClassifier.LOW)
+                ));
+        System.out.println(map.toString());
 
-        System.out.println(transactions.stream().collect(
+
+        // Sum of transaction values by currency type
+        Map<Transaction.Currency, Integer> sumByCurrency = transactions.stream().collect(
                 groupingBy(
                         Transaction::getCurrency,
                         summingInt(Transaction::getValue)
-                )));
+                ));
+        System.out.println();
+
+        // Sum of transaction values by currency type, TransactionClassifier and by year
+        Map<Transaction.Currency, Map<TransactionClassifier, Map<Integer, Integer>>> transactionsByCurrencyClassifierAndYear =
+                transactions.stream().collect(
+                groupingBy(
+                        Transaction::getCurrency,
+                        groupingBy(
+                                this::getTransactionValueClassifier,
+                                groupingBy(
+                                        Transaction::getYear,
+                                        summingInt(Transaction::getValue)
+                                ))
+
+                )
+
+                );
+        System.out.println(transactionsByCurrencyClassifierAndYear.toString());
+    }
+
+    @Test
+    public void multiLevelGroupingCollectAndThen() {
+
+        // Transactions by currency type and TransactionClassifier.
+        Map<Transaction.Currency, Integer> collect = transactions.stream().collect(
+                groupingBy(
+                        Transaction::getCurrency,
+                            collectingAndThen(
+                                collectingAndThen(
+                                    maxBy(comparing(Transaction::getValue)),
+                                    Optional::get
+                                ), Transaction::getValue)
+                ));
+        System.out.println();
+    }
+
+    @Test
+    public void partitioningByUsage() {
+
+        // Transactions by currency type and TransactionClassifier.
+        System.out.println(
+            transactions.stream().collect(
+                partitioningBy(
+                        t -> t.getValue() > LOWER_TRANSACTIONS_LIMIT
+                        ,mapping(Transaction::getValue, toList())
+                )
+            )
+        );
+
+    }
+
+    private TransactionClassifier getTransactionValueClassifier(Transaction t) {
+        return t.getValue() > LOWER_TRANSACTIONS_LIMIT ? TransactionClassifier.HIGH : TransactionClassifier.LOW;
     }
 
     private Integer sumInts(Integer i1, Integer i2) {
@@ -147,11 +192,11 @@ public class GroupingTransactions {
     }
 
     private Integer accumulateTransactionValue(Integer prev, Transaction t) {
-        System.out.printf("accumulateTransactionValue: prev: %d - TransactionValue: %d\n", prev, t.getValue());
+        System.out.printf("accumulateTransactionValue: prev: %d - TransactionClassifier: %d\n", prev, t.getValue());
         return Integer.sum(prev, t.getValue());
     }
 
-    enum TransactionValue {
+    enum TransactionClassifier {
         LOW, HIGH
     }
 }
