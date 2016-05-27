@@ -21,7 +21,7 @@ public class CustomCollectorsTests extends CollectorsTests{
                 strings
                     .parallelStream()
                     //.stream()
-                    .sorted()
+                    //.sorted()
                     .collect(new MySetCollector<>());
 
         System.out.println(collect);

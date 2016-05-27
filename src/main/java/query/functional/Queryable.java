@@ -39,6 +39,7 @@ public interface Queryable<T> extends Nonspliterator<T> {
     }
 
     default Queryable<T> filter(Predicate<T> pred) {
+
         return consumer -> tryAdvanceWithPredicate(consumer, pred);
     }
 
