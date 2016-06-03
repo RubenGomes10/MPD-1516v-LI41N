@@ -8,9 +8,16 @@ import java.util.List;
  */
 public class Serie extends ShowInterval {
 
+    List<Cast> cast;
 
+    public Serie(List<Cast> cast) {
+        this.cast = cast;
+    }
 
     List<Season> getSeasons() {
         return null;
+    }
+    public List<Cast> getCast() {
+        return cast;
     }
 }

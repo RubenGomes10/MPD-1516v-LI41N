@@ -44,7 +44,7 @@ public class GsonTests {
 
 
         assertEquals(2, movies.size());
-//        assertEquals("Movie1", m.getName());
+//        assertEquals("Movie1", m.getActorName());
 //        assertEquals(2004, m.getYearReleased());
 
     }
