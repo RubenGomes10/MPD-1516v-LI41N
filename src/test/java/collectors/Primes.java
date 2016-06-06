@@ -1,11 +1,11 @@
 package collectors;
 
 import org.junit.Test;
+import utils.Performance;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -81,29 +81,15 @@ public class Primes {
     }
 
 
-    private static <T> T measurePerformance(Supplier<T> action) {
-        long fastest = Long.MAX_VALUE;
-        T res = null;
-        for (int i = 0; i < 5; i++) {
-            long start = System.nanoTime();
-            res = action.get();
-            long duration = (System.nanoTime() - start) / 1_000_000; // mili seconds
-            //System.out.println( "> " + duration + " ms");
-            if (duration < fastest) fastest = duration;
-        }
-        System.out.println("DONE in: " + fastest + " ms");
-        return res;
-    }
-
     @Test
     public void testPrimesPerformance() {
         //final int LIMIT = 1_000_000;
         final int LIMIT = 1_000_000;
 
-        //measurePerformance(() -> primes(LIMIT));
+        //measure(() -> primes(LIMIT));
         for (int i = 0; i < 5; i++) {
-            measurePerformance(() -> primesOpt1(LIMIT));
-            measurePerformance(() -> primesOpt2(LIMIT));
+            Performance.measure(() -> primesOpt1(LIMIT));
+            Performance.measure(() -> primesOpt2(LIMIT));
         }
     }
 }

@@ -22,6 +22,7 @@ public class HttpUtils {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             return converter.apply(reader.lines().collect(joining()));
+
         } catch (IOException e) {
             return null;
         }

@@ -7,14 +7,15 @@ import series.utils.HttpUtils;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 /**
  * All the accesses to TvMaze Web API are done in this class.
  */
-public class TvMazeApiImpl implements ShowsApi {
+public class TvMazeApiImpl implements ShowsApiAsync {
     @Override
     public List<ShowDto> getShows() {
-
         return HttpUtils.getFromUri(TvMazeUri.shows(), str -> fromJson(str, new TypeToken<List<ShowDto>>() {}.getType()));
     }
 
@@ -27,6 +28,27 @@ public class TvMazeApiImpl implements ShowsApi {
         Gson gson = new Gson();
         return gson.fromJson(json, type);
 
+    }
+
+    @Override
+    public Future<List<ShowDto>> getShowsAsync() {
+        CompletableFuture<List<ShowDto>> cf = new CompletableFuture<>();
+        new Thread(() -> {
+            cf.complete(getShows());
+        }).start();
+
+        return cf;
+    }
+
+
+    @Override
+    public Future<ShowDto> getShowAsync(int id) {
+        CompletableFuture<ShowDto> cf = new CompletableFuture<>();
+        new Thread(() -> {
+            cf.complete(getShow(id));
+        }).start();
+
+        return cf;
     }
 
     private static class TvMazeUri {
