@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Hello from Handlbars template</title>
+</head>
+<body>
+
+<h2>Name: {{this.name}} </h2>
+<h3>Age: {{this.age}} </h3>
+
+<h4>Teams Played</h4>
+<ul>
+{{#each teams}}
+    <li>{{name}}</li>
+{{/each}}
+
+</ul>
+
+
+</body>
+
+</html>
