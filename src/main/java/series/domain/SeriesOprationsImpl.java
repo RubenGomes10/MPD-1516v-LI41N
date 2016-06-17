@@ -32,7 +32,7 @@ public class SeriesOprationsImpl implements SeriesOprations {
     @Override
     public Serie getSerie(int id) {
 
-        ShowDto showDto = showsApi.getShow(id);
+        ShowDto showDto = showsApi.getShow(id).join();
         return mapper.showDtoToSerie(showDto);
     }
 }

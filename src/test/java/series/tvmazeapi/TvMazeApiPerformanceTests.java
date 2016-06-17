@@ -4,11 +4,7 @@ import org.junit.Test;
 import series.tvmazeapi.dto.ShowDto;
 import utils.Performance;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import static org.junit.Assert.*;
 
 /**
  * These tests use the {@link TvMazeApiImpl} that uses the real
@@ -16,7 +12,7 @@ import static org.junit.Assert.*;
  * to succeed.
  */
 public class TvMazeApiPerformanceTests {
-    ShowsApiAsync tvMazeApi = new TvMazeApiImpl();
+    ShowsApi tvMazeApi = new TvMazeApiImpl();
 
     @Test
     public void measureSyncGetShows() throws Exception {
