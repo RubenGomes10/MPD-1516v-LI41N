@@ -22,7 +22,7 @@ public class TvMazeApiTests {
 
 
         // Act
-        ShowDto showDto = tvMazeApi.getShow(1);
+        ShowDto showDto = tvMazeApi.getShow(1).join();
 
         // Assert
         assertValidShow(showDto);
@@ -42,7 +42,7 @@ public class TvMazeApiTests {
 
 
         // Act
-        List<ShowDto> shows = tvMazeApi.getShows();
+        List<ShowDto> shows = tvMazeApi.getShows().join();
 
         // Assert
         assertNotNull(shows);

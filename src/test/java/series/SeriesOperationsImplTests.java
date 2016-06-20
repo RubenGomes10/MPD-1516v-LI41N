@@ -2,13 +2,13 @@ package series;
 
 import org.junit.Test;
 import series.domain.SeriesOprations;
-import series.domain.SeriesOprationsImpl;
+import series.domain.SeriesService;
 
 /**
  * Created by lfalcao on 30/05/16.
  */
 public class SeriesOperationsImplTests {
-    SeriesOprations seriesOperations = new SeriesOprationsImpl(
+    SeriesOprations seriesOperations = new SeriesService(
             new FakeShowsApi(), null // Mapper missing
     );
     @Test

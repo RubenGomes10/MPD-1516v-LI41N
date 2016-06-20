@@ -5,19 +5,21 @@ import com.google.gson.reflect.TypeToken;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.Response;
+import series.domain.Season;
+import series.tvmazeapi.dto.SeasonDto;
 import series.tvmazeapi.dto.ShowDto;
-import series.utils.HttpUtils;
 
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * All the accesses to TvMaze Web API are done in this class.
  */
 public class TvMazeApiImpl implements ShowsApi {
+
     AsyncHttpClient httpClient = new DefaultAsyncHttpClient();
 
     private <T> T fromJson(String json, Type type) {
@@ -27,7 +29,7 @@ public class TvMazeApiImpl implements ShowsApi {
     }
 
     @Override
-    public CompletableFuture<List<ShowDto>> getShows() {
+    public CompletableFuture<Stream<ShowDto>> getShows() {
         return prepareRequest(TvMazeUri.shows(), str -> fromJson(str, new TypeToken<List<ShowDto>>() {}.getType()));
     }
 
@@ -37,14 +39,19 @@ public class TvMazeApiImpl implements ShowsApi {
         return prepareRequest(TvMazeUri.show(id), str -> fromJson(str, ShowDto.class));
     }
 
+    @Override
+    public CompletableFuture<Stream<Season>> getSeasons(int id) {
+        return prepareRequest(TvMazeUri.seasons(id), str -> fromJson(str, new TypeToken<List<SeasonDto>>() {}.getType()));
+    }
+
 
     private <T> CompletableFuture<T> prepareRequest(String uri, Function<String, T> mapper) {
+
         return httpClient.prepareGet(uri)
                 .execute()
                 .toCompletableFuture()
                 .thenApply(Response::getResponseBody)
                 .thenApply(mapper);
-
     }
 
     private static class TvMazeUri {
@@ -63,6 +70,9 @@ public class TvMazeApiImpl implements ShowsApi {
 
         public static String show(int id) {
             return uriGenerator("shows", id);
+        }
+        public static String seasons(int id) {
+            return uriGenerator(String.format("shows/%d/seasons", id));
         }
     }
 

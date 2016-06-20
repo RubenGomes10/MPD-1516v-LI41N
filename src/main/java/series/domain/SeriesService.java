@@ -2,22 +2,26 @@ package series.domain;
 
 import series.domain.mapping.DtoToDomainMapper;
 import series.tvmazeapi.ShowsApi;
+import series.tvmazeapi.TvMazeApiImpl;
 import series.tvmazeapi.dto.ShowDto;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by lfalcao on 30/05/16.
  */
-public class SeriesOprationsImpl implements SeriesOprations {
+public class SeriesService implements SeriesOprations {
     ShowsApi showsApi;
     private DtoToDomainMapper mapper;
 
 
-    public SeriesOprationsImpl(ShowsApi tvMazeApi, DtoToDomainMapper mapper) {
+    public SeriesService(ShowsApi tvMazeApi, DtoToDomainMapper mapper) {
         this.showsApi = tvMazeApi;
         this.mapper = mapper;
     }
+
+
 
     @Override
     public List<Serie> searchSerie(String searchString) {
@@ -30,9 +34,13 @@ public class SeriesOprationsImpl implements SeriesOprations {
     }
 
     @Override
-    public Serie getSerie(int id) {
+    public CompletableFuture<Serie> getSerie(int id) {
+        return showsApi
+                .getShow(id)
+                .thenApply(mapper::showDtoToSerie);
+    }
 
-        ShowDto showDto = showsApi.getShow(id).join();
-        return mapper.showDtoToSerie(showDto);
+    public CompletableFuture<Serie> getSeasonsForSerie(int serieId) {
+        return null;
     }
 }

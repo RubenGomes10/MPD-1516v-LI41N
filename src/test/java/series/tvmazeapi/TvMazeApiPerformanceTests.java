@@ -4,7 +4,9 @@ import org.junit.Test;
 import series.tvmazeapi.dto.ShowDto;
 import utils.Performance;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiFunction;
 
 /**
  * These tests use the {@link TvMazeApiImpl} that uses the real
@@ -38,19 +40,12 @@ public class TvMazeApiPerformanceTests {
 
 
     public ShowDto callGetShowSync() {
-        tvMazeApi.getShow(1);
-        return tvMazeApi.getShow(1);
+        tvMazeApi.getShow(1).join();
+        return tvMazeApi.getShow(1).join();
     }
 
     public ShowDto callGetShowAsync() {
-        tvMazeApi.getShowAsync(1);
-        try {
-            return tvMazeApi.getShowAsync(1).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        CompletableFuture<ShowDto> showName = tvMazeApi.getShow(1).thenCombine(tvMazeApi.getShow(1), (s1, s2) -> s1);
+        return showName.join();
     }
 }
